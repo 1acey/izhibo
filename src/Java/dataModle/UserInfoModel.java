@@ -6,6 +6,7 @@ public class UserInfoModel {
     private String userAccount;
     private String userPassword;
     private String userName;
+
     public String getUserName() {
         return userName;
     }
@@ -30,9 +31,5 @@ public class UserInfoModel {
     public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
     }
-    public static void checkUserLogin(String userAccount,String userPassword){
 
-
-
-    }
 }

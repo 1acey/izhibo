@@ -11,6 +11,18 @@ import java.util.List;
 
 //数据库操作类
 public class DBOpUnit {
+    private static volatile DBOpUnit dbOpUnit=null;
+    private DBOpUnit(){};
+    public static DBOpUnit getInstance(){
+        if(dbOpUnit==null)
+            synchronized (DBOpUnit.class)
+            {
+                if (dbOpUnit==null)
+                    dbOpUnit=new DBOpUnit();
+            }
+        return dbOpUnit;
+
+    }
     public List<UserInfoModel> queryAllUser() throws SQLException{
         List<UserInfoModel> userInfoModelList=new ArrayList<UserInfoModel>();
         Connection connection=DBConUnit.getConnection();
