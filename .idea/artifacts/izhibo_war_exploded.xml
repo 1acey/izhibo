@@ -6,6 +6,12 @@
         <element id="directory" name="classes">
           <element id="module-output" name="izhibo" />
         </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: junit:junit:3.8.1" />
+          <element id="library" level="project" name="apache-tomcat-8.5.23-windows-x64" />
+          <element id="library" level="project" name="json_jar" />
+          <element id="library" level="project" name="mysql-connector-java-5.1" />
+        </element>
       </element>
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/target/izhibo/META-INF/MANIFEST.MF" />
