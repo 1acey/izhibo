@@ -2,10 +2,14 @@ package dataModle;
 
 import widget.CommonUnits;
 
-public class UserInfoModel {
+import java.io.Serializable;
+
+public class UserInfoModel implements Serializable {
     private String userAccount;
     private String userPassword;
     private String userName;
+
+    private String userToken;
 
     public String getUserName() {
         return userName;
@@ -30,6 +34,14 @@ public class UserInfoModel {
 
     public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
+    }
+
+    public String getUserToken() {
+        return userToken;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
     }
 
 }

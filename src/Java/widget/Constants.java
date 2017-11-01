@@ -24,4 +24,13 @@ public class Constants {
     public static final String REGISTER_USERDATA_ACCOUNTVALID="账号不合法";
     public static final String REGISTER_USERDATA_ACCOUNTNOTCONTAINS="账号不存在";
     public static final String REGISTER_USERDATA_ACCOUNTCONTAINS="账号已存在";
+    public static final String JWT_PAYLOAD_ISS="UESTC";
+    public static final String JWT_HEADER_TYPE="JWT";
+    public static final String JWT_HEADER_ALG="HS256";
+    public static final String JWT_SECERT="132SDASD45DSD";//jwt所用到的密钥
+    public static final String CODE_THOUSAND="1000";//该code表示token过期
+    public static final String CODE_SIX="6";//该code表示token无效
+    public static final String JWT_TOKEN_EXPIRED="token失效，请重新登录";
+    public static final String JWT_TOKEN_INVALID="token错误，请重试";
+
 }
