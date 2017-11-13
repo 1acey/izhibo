@@ -10,9 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.sql.SQLException;
 
-public class NewRegisterServlet extends HttpServlet {
+
+public class OldRegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)throws IOException {
         doPost(request, response);
@@ -36,7 +39,6 @@ public class NewRegisterServlet extends HttpServlet {
                 //账号合法写入数据库
                 try{
                     if (UserInfoManager.isInsertDataSuccess(userAccount,userPassword,userName)){
-                        UserInfoManager.createUidByUserAccount(userAccount);//为用户创建uid,为客户端登录互踢的实现作准备
                         jsonResponse.put(Constants.CODE, Constants.CODE_SUCCESS);
                         jsonResponse.put(Constants.MSG, Constants.REGISTER_SUCCESS);
                     }
@@ -49,8 +51,8 @@ public class NewRegisterServlet extends HttpServlet {
                 {
                     e.printStackTrace();
                 }
-//                jsonResponse.put(Constants.CODE, Constants.CODE_SUCCESS);
-//                jsonResponse.put(Constants.MSG, Constants.REGISTER_SUCCESS);
+                jsonResponse.put(Constants.CODE, Constants.CODE_SUCCESS);
+                jsonResponse.put(Constants.MSG, Constants.REGISTER_SUCCESS);
             } else {
                 jsonResponse.put(Constants.CODE, Constants.CODE_FIVE);
                 jsonResponse.put(Constants.MSG, Constants.REGISTER_USERDATA_ACCOUNTVALID);
@@ -64,6 +66,15 @@ public class NewRegisterServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Methods", "GET,POST");
         OutputStream outputStream = response.getOutputStream();
         outputStream.write(jsonResponse.toString().getBytes("UTF-8"));
+
+        //response.setHeader("Content-type","register/josn;charset=UTF-8");
+        //response.setContentType("register/json");
+        //response.setCharacterEncoding("UTF-8");
+        //实现跨域访问
+        //response.setHeader("Access-Control-Allow-Methods", "GET,POST");
+        //PrintWriter writer=response.getWriter();
+        //writer.write(jsonResponse.toString());
+        //消息发出
+        //writer.flush();
     }
 }
-

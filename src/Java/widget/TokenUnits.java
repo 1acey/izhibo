@@ -3,6 +3,8 @@ package widget;
 import dataModle.JWTHeader;
 import dataModle.JWTPayLoad;
 
+import java.sql.DataTruncation;
+
 //生成token的工具类，采用建造者模式
 public class TokenUnits {
     public static class Builder{
@@ -38,7 +40,7 @@ public class TokenUnits {
         }
     }
     private static class TokenParams{
-        private JWTHeader mJwtHeader=new JWTHeader();
+        private JWTHeader mJwtHeader = new JWTHeader();
         private String mIat;//jwt的签发时间
         private String mExp;//过期时间
         private String mUid;//用户id

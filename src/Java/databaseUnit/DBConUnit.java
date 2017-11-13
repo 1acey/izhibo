@@ -8,7 +8,7 @@ import java.sql.DriverManager;
 //数据库连接类
 public class DBConUnit {
     private static volatile Connection connect = null;
-    private DBConUnit(){};
+    private DBConUnit(){}
     public static Connection getInstance(){
         if(connect==null)
             synchronized (DBConUnit.class)
@@ -26,7 +26,7 @@ public class DBConUnit {
                     }
                     try {
                         connect = DriverManager.getConnection(
-                                "jdbc:mysql://localhost:8700/userdata","root","1063382688");
+                                "jdbc:mysql://localhost:3306/userdata","root","1063382688");
                         //连接URL为   jdbc:mysql//服务器地址/数据库名  ，后面的2个参数分别是登陆用户名和密码
                         System.out.println("Success connect Mysql server!");
                     }

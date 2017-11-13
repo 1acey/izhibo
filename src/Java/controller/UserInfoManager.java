@@ -7,6 +7,8 @@ import dataModle.UserInfoModel;
 import databaseUnit.DBConUnit;
 import databaseUnit.DBOpUnit;
 import jwt.TokenState;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -47,12 +49,12 @@ public class UserInfoManager {
         return DBOpUnit.getInstance().insertData(userAccount, userPassword, userName);
     }
 
-    public static void createUidByUserAccount(String userAccount) {
-        DBOpUnit.getInstance().createUidByUserAccount(userAccount);
+    public static void createUidByUserAccount(String userAccount,String deviceId) throws SQLException{
+        DBOpUnit.getInstance().createUidByUserAccount(userAccount,deviceId);
 
     }
 
-    public static String getUidByUserAccount(String userAccount) {
+    public static String getUidByUserAccount(String userAccount) throws SQLException{
         return DBOpUnit.getInstance().getUidByUserAccount(userAccount);
     }
     //解析token。并判断token的有效性和是否已经过期，返回的结果是一个枚举类型
@@ -77,5 +79,14 @@ public class UserInfoManager {
 
     public static List<AttentionAnchorModel>getAttentionAnchorList(String uid){
         return DBOpUnit.getInstance().getAttentionAnchorListByUid(uid);
+    }
+    public static String getCurrentTime(){
+        Long timeStamp = System.currentTimeMillis();
+        return timeStamp.toString();
+    }
+    public static String getExpiredTime(){
+        Long CurrentTime = System.currentTimeMillis();
+        CurrentTime += 7*24*60*60*1000;
+        return CurrentTime.toString();
     }
 }

@@ -1,13 +1,11 @@
 package servlet;
 
-import controller.UserInfoManager;
 import dataModle.HttpBaseModel;
 import dataModle.UserInfoModel;
 import databaseUnit.DBOpUnit;
 import net.sf.json.JSONObject;
 import widget.CommonUnits;
 import widget.Constants;
-import widget.TokenUnits;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,15 +14,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
 
-public class NewLoginServlet extends HttpServlet {
+public class OldLoginServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)throws IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)throws IOException{
         doPost(request, response);
     }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-
+       JSONObject jsonResponse = new JSONObject();
         HttpBaseModel baseModel=new HttpBaseModel();
         UserInfoModel userInfoModel = new UserInfoModel();
         String userAccount = request.getParameter("userAccount");
@@ -33,24 +31,20 @@ public class NewLoginServlet extends HttpServlet {
         if (CommonUnits.stringDataIsValid(userAccount, userPassword)) {
             //如果用户的账号存在
             try {
-                if (UserInfoManager.loginCheck(userAccount,userPassword)){
+                if (DBOpUnit.getInstance().loginCheck(userAccount,userPassword)){
                     userInfoModel.setUserAccount(userAccount);
                     userInfoModel.setUserPassword(userPassword);
-                    //如果用户的账号密码正确,此时为用户生成一个token
-                    String token= new TokenUnits.Builder()
-                            .setExp("")
-                            .setIat("")
-                            .setTargetUser(userAccount)
-                            .setUid(UserInfoManager.getUidByUserAccount(userAccount))
-                            .createToken();
-                    userInfoModel.setUserToken(token);
+                    //如果用户的账号密码正确,登录成功
                     baseModel.setCode(Constants.CODE_SUCCESS);
                     baseModel.setMsg(Constants.LOGIN_SUCCESS);
                     baseModel.setData(userInfoModel);
+//                    jsonResponse.put(Constants.CODE, Constants.CODE_SUCCESS);
+//                    jsonResponse.put(Constants.MSG, Constants.LOGIN_SUCCESS);
+//                    jsonResponse.put(Constants.DATA,userInfoModel);
 
                 } else {
-                    baseModel.setCode(Constants.CODE_THREE);
-                    baseModel.setMsg(Constants.LOGIN_ERROR);
+                    jsonResponse.put(Constants.CODE, Constants.CODE_THREE);
+                    jsonResponse.put(Constants.MSG, Constants.LOGIN_ERROR);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -58,15 +52,21 @@ public class NewLoginServlet extends HttpServlet {
 
 
         } else {
-            baseModel.setCode(Constants.CODE_TWO);
-            baseModel.setMsg(Constants.LOGIN_USERDATA_SOMETHINGNULL);
-
+            jsonResponse.put(Constants.CODE, Constants.CODE_TWO);
+            jsonResponse.put(Constants.MSG, Constants.LOGIN_USERDATA_SOMETHINGNULL);
         }
         response.setHeader("content-type", "text/html;charset=UTF-8");
         response.setHeader("Access-Control-Allow-Methods", "GET,POST");
         OutputStream outputStream = response.getOutputStream();
         outputStream.write(CommonUnits.getJsonArrayFromObj(baseModel).toString().getBytes("UTF-8"));
-
+       // outputStream.write(jsonResponse.toString().getBytes("UTF-8"));
+        //response.setContentType("login/html");
+        //response.setCharacterEncoding("UTF-8");
+        //实现跨域访问
+        //response.setHeader("Access-Control-Allow-Methods", "GET,POST");
+        //Writer writer=response.getWriter();
+        //writer.write(jsonResponse.toString());
+        //消息发出
+        //writer.flush();
     }
 }
-
