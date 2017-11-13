@@ -1,6 +1,8 @@
 package servlet;
 
 import controller.UserInfoManager;
+import dataModle.BaseModel;
+import dataModle.HttpBaseModel;
 import net.sf.json.JSONObject;
 import widget.CommonUnits;
 import widget.Constants;
@@ -20,15 +22,12 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpBaseModel baseModel = new HttpBaseModel();
         JSONObject jsonResponse = new JSONObject();
-        //UserInfoModel userInfoModel = new UserInfoModel();
         String userAccount = request.getParameter("userAccount");
         String userPassword = request.getParameter("userPassword");
         String userName = request.getParameter("userName");
         String deviceId = request.getParameter("deviceId");
-        System.out.println(userAccount);
-        System.out.println(userPassword);
-        System.out.println(deviceId);
         //如果接收到的账号和密码都不为空
         if (CommonUnits.stringDataIsValid(userAccount, userPassword)) {
             //判断账号是否合法
@@ -38,33 +37,30 @@ public class RegisterServlet extends HttpServlet {
                 try{
                     if (UserInfoManager.isInsertDataSuccess(userAccount,userPassword,userName)){
                         UserInfoManager.createUidByUserAccount(userAccount,deviceId);//为用户创建uid,为客户端登录互踢的实现作准备
-                        jsonResponse.put(Constants.CODE, Constants.CODE_SUCCESS);
-                        jsonResponse.put(Constants.MSG, Constants.REGISTER_SUCCESS);
+                        baseModel.setCode(Constants.CODE_SUCCESS);
+                        baseModel.setMsg(Constants.REGISTER_SUCCESS);
                     }
                     else {
-                        jsonResponse.put(Constants.CODE, Constants.CODE_THREE);
-                        jsonResponse.put(Constants.MSG, Constants.REGISTER_USERDATA_ACCOUNTCONTAINS);
-
+                        baseModel.setCode(Constants.CODE_THREE);
+                        baseModel.setMsg(Constants.REGISTER_USERDATA_ACCOUNTCONTAINS);
                     }
                 }catch (SQLException e)
                 {
                     e.printStackTrace();
                 }
-//                jsonResponse.put(Constants.CODE, Constants.CODE_SUCCESS);
-//                jsonResponse.put(Constants.MSG, Constants.REGISTER_SUCCESS);
             } else {
-                jsonResponse.put(Constants.CODE, Constants.CODE_FIVE);
-                jsonResponse.put(Constants.MSG, Constants.REGISTER_USERDATA_ACCOUNTVALID);
+                baseModel.setCode(Constants.CODE_FIVE);
+                baseModel.setMsg(Constants.REGISTER_USERDATA_ACCOUNTVALID);
             }
 
         } else {
-            jsonResponse.put(Constants.CODE, Constants.CODE_TWO);
-            jsonResponse.put(Constants.MSG, Constants.LOGIN_USERDATA_SOMETHINGNULL);
+            baseModel.setCode(Constants.CODE_TWO);
+            baseModel.setMsg(Constants.LOGIN_USERDATA_SOMETHINGNULL);
         }
         response.setHeader("content-type", "text/html;charset=UTF-8");
         response.setHeader("Access-Control-Allow-Methods", "GET,POST");
         OutputStream outputStream = response.getOutputStream();
-        outputStream.write(jsonResponse.toString().getBytes("UTF-8"));
+        outputStream.write(CommonUnits.getJsonArrayFromObj(baseModel).toString().getBytes("UTF-8"));
     }
 }
 

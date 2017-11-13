@@ -3,16 +3,16 @@ package widget;
 import net.sf.json.JSONArray;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
-import sun.security.provider.SHA;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 public class CommonUnits {
     public static Boolean stringDataIsValid(String data) {
@@ -96,14 +96,30 @@ public class CommonUnits {
     }
 
     //将需要加密的明文与密钥secert进行加密，返回字符串
-    public static String getStrByAlg_HS256(String strBeforeAlg, String secert) {
+    public static String getStrByAlg_HS256(String strBeforeAlg, String key) {
         try{
-            MessageDigest sha = MessageDigest.getInstance("SHA-256");
-            sha.update(strBeforeAlg.getBytes());
-            sha.digest();
-        }catch (NoSuchAlgorithmException e){
+            SecretKeySpec singkey = new SecretKeySpec(key.getBytes(),"HmacSHA256");
+            Mac mac = Mac.getInstance("HmacSHA256");
+            mac.init(singkey);
+            return byte2hex(mac.doFinal(strBeforeAlg.getBytes()));
+        }catch (NoSuchAlgorithmException e)
+        {
+            e.printStackTrace();
+        }catch (InvalidKeyException e){
             e.printStackTrace();
         }
         return null;
+    }
+    public static String byte2hex(byte[] b)
+    {
+        StringBuilder hs = new StringBuilder();
+        String stmp;
+        for (int n = 0; b!=null && n < b.length; n++) {
+            stmp = Integer.toHexString(b[n] & 0XFF);
+            if (stmp.length() == 1)
+                hs.append('0');
+            hs.append(stmp);
+        }
+        return hs.toString().toUpperCase();
     }
 }
