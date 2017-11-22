@@ -27,4 +27,5 @@
     <servlet-name>GetAttentionAnchorServlet</servlet-name>
     <url-pattern>/GetAttentionAnchorServlet</url-pattern>
   </servlet-mapping>
+
 </web-app>

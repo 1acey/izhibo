@@ -25,10 +25,9 @@ public class GetAttentionAnchorServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        JSONObject jsonResponse = new JSONObject();
         AttentionAnchorBaseModel attentionAnchorBaseModel = new AttentionAnchorBaseModel();
         String token = request.getParameter("token");
+        System.out.println(token);
         TokenState tokenState = UserInfoManager.checkToken(token);
         //接收到的token是有效的话
         if (tokenState.equals(TokenState.VALID)) {

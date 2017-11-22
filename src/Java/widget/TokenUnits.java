@@ -3,6 +3,7 @@ package widget;
 import dataModle.JWTHeader;
 import dataModle.JWTPayLoad;
 
+import java.io.Serializable;
 import java.sql.DataTruncation;
 
 //生成token的工具类，采用建造者模式
@@ -34,13 +35,12 @@ public class TokenUnits {
                     ,tokenParams.mUid,tokenParams.mTargetUser);
             String jwtHeaderStr=CommonUnits.getStrFromObjByBase64(tokenParams.mJwtHeader);
             String jwtPayLoadStr=CommonUnits.getStrFromObjByBase64(tokenParams.mJwtPayLoad);
-            String result=CommonUnits.getStrByAlg_HS256(jwtHeaderStr+"."+jwtPayLoadStr,tokenParams.mSecert);
-            System.out.println(result);
+            String result=CommonUnits.getStrByAlg_HS256(jwtHeaderStr + "." +jwtPayLoadStr,tokenParams.mSecert);
             String token=jwtHeaderStr+"."+jwtPayLoadStr+"."+result;
             return token;
         }
     }
-    private static class TokenParams{
+    private static class TokenParams implements Serializable{
         private JWTHeader mJwtHeader = new JWTHeader();
         private String mIat;//jwt的签发时间
         private String mExp;//过期时间

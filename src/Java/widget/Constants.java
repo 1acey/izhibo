@@ -1,6 +1,5 @@
 package widget;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
 
 public class Constants {
     public static final String CODE="code";

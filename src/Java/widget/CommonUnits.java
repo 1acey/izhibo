@@ -1,18 +1,17 @@
 package widget;
 
-import net.sf.json.JSONArray;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import net.sf.json.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.util.Base64;
+import java.io.*;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import dataModle.JWTPayLoad;
+import widget.TokenUnits;
 
 public class CommonUnits {
     public static Boolean stringDataIsValid(String data) {
@@ -44,77 +43,78 @@ public class CommonUnits {
         JSONArray jsonArray = JSONArray.fromObject(object);
         return jsonArray;
     }
+    public static String getJsonValue(JSONObject jsonObject,String str){
+        return jsonObject.getString(str);
+    }
 
     //将object对象经base64处理之后转化成字符串
     public static String getStrFromObjByBase64(Object object) {
-        JSONArray jsonArray = getJsonArrayFromObj(object);
-        BASE64Encoder base64Encoder = new BASE64Encoder();
+        JSONObject jsonObject=JSONObject.fromObject(object);
+        String jsonarr=jsonObject.toString();
         String result = null;
-        result = base64Encoder.encode(jsonArray.toString().getBytes());
+        System.out.println(jsonarr);
+        try {
+            result = Base64.getEncoder().encodeToString(jsonarr.getBytes("utf-8"));
+        }catch (IOException e){
+            System.out.println("base64编码和序列化问题。");
+        }
         return result;
     }
 
     //将base64编码之后的字符串进行解密并返回一个对象
-    public static Object getObjectFromStrByBased64(String strByBase64) {
-        BASE64Decoder base64Decoder = new BASE64Decoder();
+    public static JWTPayLoad getObjectFromStrByBased64(String strByBase64) {
         byte[] result = null;
-        Object resultObj=null;
+        String strresult ="";
+        String iat ="";
+        String exp ="";
+        String uid ="";
         try {
-            result = base64Decoder.decodeBuffer(strByBase64);
-        } catch (IOException e) {
-            System.out.println("base64解密错误");
-            e.printStackTrace();
+            result = Base64.getDecoder().decode(strByBase64);
+            strresult = new String(result,"utf-8");
+            JSONObject jsonObject= JSONObject.fromObject(strresult);
+            iat = getJsonValue(jsonObject,"iat");
+            exp = getJsonValue(jsonObject,"exp");
+            uid = getJsonValue(jsonObject,"uid");
+        }catch (IOException e){
+            System.out.println("base64解码和反序列化问题。");
         }
-        try {
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(result);
-            ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-            try {
-                resultObj=objectInputStream.readObject();
-                byteArrayInputStream.close();
-                objectInputStream.close();
-            } catch (ClassNotFoundException e) {
-                System.out.println("将byte[]转成对象的时候出错");
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            System.out.println("读byte[]时候出错");
-            e.printStackTrace();
-        }
+        JWTPayLoad resultObj = new JWTPayLoad(iat,exp,uid,"demo");
         return resultObj;
-
     }
 
     /**
-     *
-     * @param signedTime  数据的签名时间
-     * @param survivalTime  数据的有效存活期限
-     * @param nowTime  当前时间
+     * @param signedTime   数据的签名时间
+     * @param survivalTime 数据的有效存活期限
+     * @param nowTime      当前时间
      * @return
      */
-    public static Boolean isDataExpired(String signedTime,String survivalTime,String nowTime){
-        return true;
+    public static Boolean isDataExpired(String signedTime, String survivalTime, String nowTime) {
+        long expiredTime = Long.parseLong(survivalTime);
+        if (expiredTime > System.currentTimeMillis()) {
+            return true;
+        } else
+            return false;
     }
 
     //将需要加密的明文与密钥secert进行加密，返回字符串
     public static String getStrByAlg_HS256(String strBeforeAlg, String key) {
-        try{
-            SecretKeySpec singkey = new SecretKeySpec(key.getBytes(),"HmacSHA256");
+        try {
+            SecretKeySpec singkey = new SecretKeySpec(key.getBytes(), "HmacSHA256");
             Mac mac = Mac.getInstance("HmacSHA256");
             mac.init(singkey);
             return byte2hex(mac.doFinal(strBeforeAlg.getBytes()));
-        }catch (NoSuchAlgorithmException e)
-        {
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-        }catch (InvalidKeyException e){
+        } catch (InvalidKeyException e) {
             e.printStackTrace();
         }
         return null;
     }
-    public static String byte2hex(byte[] b)
-    {
+
+    public static String byte2hex(byte[] b) {
         StringBuilder hs = new StringBuilder();
         String stmp;
-        for (int n = 0; b!=null && n < b.length; n++) {
+        for (int n = 0; b != null && n < b.length; n++) {
             stmp = Integer.toHexString(b[n] & 0XFF);
             if (stmp.length() == 1)
                 hs.append('0');

@@ -1,9 +1,11 @@
 package dataModle;
 
-import org.omg.PortableServer.THREAD_POLICY_ID;
 import widget.Constants;
 
-public class JWTPayLoad {
+import java.io.Serializable;
+
+public class JWTPayLoad implements Serializable {
+    private static final long serialVersionUID = 33300242015L;
     private String iss;//jwt的签发者
     private String iat;//jwi的签发时间。这里采用时间戳的形式
     private String exp;//jwt的过期时间，规定jwt的有效期为一周
@@ -41,4 +43,5 @@ public class JWTPayLoad {
         this.uid = uid;
         this.targetUser = targetUser;
     }
+
 }
