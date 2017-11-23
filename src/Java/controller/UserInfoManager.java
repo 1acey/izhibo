@@ -89,4 +89,7 @@ public class UserInfoManager {
         CurrentTime += 7*24*60*60*1000;
         return CurrentTime.toString();
     }
+    public static String getUserName(String userAccount) throws SQLException{
+        return DBOpUnit.getInstance().getUserName(userAccount);
+    }
 }

@@ -4,7 +4,6 @@ import controller.UserInfoManager;
 import dataModle.HttpBaseModel;
 import dataModle.UserInfoModel;
 import databaseUnit.DBOpUnit;
-import net.sf.json.JSONObject;
 import widget.CommonUnits;
 import widget.Constants;
 import widget.TokenUnits;
@@ -22,7 +21,7 @@ public class LoginServlet extends HttpServlet {
         doPost(request, response);
     }
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
 
 
         HttpBaseModel baseModel=new HttpBaseModel();
@@ -36,6 +35,8 @@ public class LoginServlet extends HttpServlet {
                 if (UserInfoManager.loginCheck(userAccount,userPassword)){
                     userInfoModel.setUserAccount(userAccount);
                     userInfoModel.setUserPassword(userPassword);
+                    String userName = UserInfoManager.getUserName(userAccount);
+                    userInfoModel.setUserName(userName);
                     //如果用户的账号密码正确,此时为用户生成一个token
                     String token= new TokenUnits.Builder()
                             .setExp(UserInfoManager.getExpiredTime())
@@ -65,7 +66,8 @@ public class LoginServlet extends HttpServlet {
         response.setHeader("content-type", "text/html;charset=UTF-8");
         response.setHeader("Access-Control-Allow-Methods", "GET,POST");
         OutputStream outputStream = response.getOutputStream();
-        outputStream.write(CommonUnits.getJsonArrayFromObj(baseModel).toString().getBytes("UTF-8"));
+        outputStream.write(CommonUnits.getJsonObjectFromObj(baseModel).toString().getBytes("UTF-8"));
+        System.out.println("数据返回成功。");
 
     }
 }

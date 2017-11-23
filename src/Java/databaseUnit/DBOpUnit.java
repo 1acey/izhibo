@@ -143,7 +143,7 @@ public class DBOpUnit {
                 PreparedStatement preparedStatement = connection.prepareStatement(stringBuilder.toString());
                 preparedStatement.setString(1, userAccount);
                 preparedStatement.setString(2, s_uid);
-                preparedStatement.setString(3, deviceId);
+                preparedStatement.setString(3, "qqqqqqqqqqq");
                 preparedStatement.executeUpdate();
                 return true;
             }
@@ -173,16 +173,30 @@ public class DBOpUnit {
         return null;
     }
 
-    public boolean loginCheck(String userAccount1, String userPassword1) throws SQLException {
+    public boolean loginCheck(String userAccount, String userPassword) throws SQLException {
         Connection connection = DBConUnit.getInstance();
         StringBuilder stringBuilder1 = new StringBuilder();
         stringBuilder1.append(
-                "select UserAccount,UserPassword from userdata where UserAccount=" + userAccount1 + " and UserPassword=" + userPassword1);
+                "select UserAccount,UserPassword from userdata where UserAccount=" + userAccount + " and UserPassword=" + userPassword);
         PreparedStatement preparedStatement1 = connection.prepareStatement(stringBuilder1.toString());
         ResultSet resultSet = preparedStatement1.executeQuery();
         if (resultSet.next())
             return true;
         else
             return false;
+    }
+    public String getUserName(String userAccount) throws SQLException{
+        Connection connection = DBConUnit.getInstance();
+        StringBuilder stringBuilder1 = new StringBuilder();
+        stringBuilder1.append(
+                "select UserName from userdata where UserAccount=" + userAccount);
+        PreparedStatement preparedStatement1 = connection.prepareStatement(stringBuilder1.toString());
+        ResultSet resultSet = preparedStatement1.executeQuery();
+        if (resultSet.next()){
+            System.out.println(resultSet.getString(1));
+            String s = resultSet.getString(1);
+            return s;
+        }else
+            return null;
     }
 }

@@ -29,6 +29,7 @@ public class Constants {
     public static final String JWT_SECERT="132SDASD45DSD";//jwt所用到的密钥
     public static final String CODE_THOUSAND="1000";//该code表示token过期
     public static final String CODE_SIX="6";//该code表示token无效
+    public static final String JWT_TOKEN_VALID="验证token合法";
     public static final String JWT_TOKEN_EXPIRED="token失效，请重新登录";
     public static final String JWT_TOKEN_INVALID="token错误，请重试";
 

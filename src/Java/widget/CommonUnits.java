@@ -39,9 +39,9 @@ public class CommonUnits {
             return false;
     }
 
-    public static JSONArray getJsonArrayFromObj(Object object) {
-        JSONArray jsonArray = JSONArray.fromObject(object);
-        return jsonArray;
+    public static JSONObject getJsonObjectFromObj(Object object) {
+        JSONObject jsonObject = JSONObject.fromObject(object);
+        return jsonObject;
     }
     public static String getJsonValue(JSONObject jsonObject,String str){
         return jsonObject.getString(str);
@@ -52,7 +52,6 @@ public class CommonUnits {
         JSONObject jsonObject=JSONObject.fromObject(object);
         String jsonarr=jsonObject.toString();
         String result = null;
-        System.out.println(jsonarr);
         try {
             result = Base64.getEncoder().encodeToString(jsonarr.getBytes("utf-8"));
         }catch (IOException e){

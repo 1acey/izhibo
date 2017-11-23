@@ -37,6 +37,8 @@ public class TokenUnits {
             String jwtPayLoadStr=CommonUnits.getStrFromObjByBase64(tokenParams.mJwtPayLoad);
             String result=CommonUnits.getStrByAlg_HS256(jwtHeaderStr + "." +jwtPayLoadStr,tokenParams.mSecert);
             String token=jwtHeaderStr+"."+jwtPayLoadStr+"."+result;
+
+            System.out.println("创建token 成功.");
             return token;
         }
     }

@@ -1,7 +1,6 @@
 package servlet;
 
 import controller.UserInfoManager;
-import dataModle.BaseModel;
 import dataModle.HttpBaseModel;
 import net.sf.json.JSONObject;
 import widget.CommonUnits;
@@ -60,7 +59,8 @@ public class RegisterServlet extends HttpServlet {
         response.setHeader("content-type", "text/html;charset=UTF-8");
         response.setHeader("Access-Control-Allow-Methods", "GET,POST");
         OutputStream outputStream = response.getOutputStream();
-        outputStream.write(CommonUnits.getJsonArrayFromObj(baseModel).toString().getBytes("UTF-8"));
+        outputStream.write(CommonUnits.getJsonObjectFromObj(baseModel).toString().getBytes("UTF-8"));
+        System.out.println("数据返回成功。");
     }
 }
 

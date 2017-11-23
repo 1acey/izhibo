@@ -3,9 +3,7 @@ package servlet;
 import controller.UserInfoManager;
 import dataModle.AttentionAnchorBaseModel;
 import dataModle.AttentionAnchorModel;
-import dataModle.HttpBaseModel;
 import jwt.TokenState;
-import net.sf.json.JSONObject;
 import widget.CommonUnits;
 import widget.Constants;
 
@@ -35,7 +33,7 @@ public class GetAttentionAnchorServlet extends HttpServlet {
             List<AttentionAnchorModel> list = UserInfoManager.getAttentionAnchorList(userUid);
             attentionAnchorBaseModel.setData(list);
             attentionAnchorBaseModel.setCode(Constants.CODE_SUCCESS);
-            attentionAnchorBaseModel.setMsg(Constants.LOGIN_SUCCESS);
+            attentionAnchorBaseModel.setMsg(Constants.JWT_TOKEN_VALID);
         }
         //接收到的token已经过期
         else if(tokenState.equals(TokenState.EXPIRED)){
@@ -50,7 +48,7 @@ public class GetAttentionAnchorServlet extends HttpServlet {
         response.setHeader("content-type", "text/html;charset=UTF-8");
         response.setHeader("Access-Control-Allow-Methods", "GET,POST");
         OutputStream outputStream = response.getOutputStream();
-        outputStream.write(CommonUnits.getJsonArrayFromObj(attentionAnchorBaseModel)
+        outputStream.write(CommonUnits.getJsonObjectFromObj(attentionAnchorBaseModel)
                 .toString()
                 .getBytes("UTF-8"));
     }
