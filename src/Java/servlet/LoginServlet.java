@@ -7,6 +7,7 @@ import databaseUnit.DBOpUnit;
 import widget.CommonUnits;
 import widget.Constants;
 import widget.TokenUnits;
+import push.appPush;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +34,7 @@ public class LoginServlet extends HttpServlet {
             //如果用户的账号存在
             try {
                 if (UserInfoManager.loginCheck(userAccount,userPassword)){
+                    appPush.startPush();
                     userInfoModel.setUserAccount(userAccount);
                     userInfoModel.setUserPassword(userPassword);
                     String userName = UserInfoManager.getUserName(userAccount);

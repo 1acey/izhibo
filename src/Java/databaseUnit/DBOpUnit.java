@@ -193,7 +193,6 @@ public class DBOpUnit {
         PreparedStatement preparedStatement1 = connection.prepareStatement(stringBuilder1.toString());
         ResultSet resultSet = preparedStatement1.executeQuery();
         if (resultSet.next()){
-            System.out.println(resultSet.getString(1));
             String s = resultSet.getString(1);
             return s;
         }else
